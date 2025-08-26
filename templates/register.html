@@ -1,0 +1,81 @@
+<script src="https://cdn.tailwindcss.com"></script>
+
+{% load static %}
+<!-- Main container for the signup form -->
+<div class="max-w-md bg-white mx-auto font-[sans-serif] p-8 shadow-lg rounded-lg mt-32 border border-gray-200 text-center">
+    <div class="mb-8">
+        <!-- Logo -->
+        <a><img src="{% static 'img/logo.jpg' %}" alt="logo" class='w-12 mx-auto' /></a>
+        <h4 class="text-black text-xl font-semibold mt-4">Sign up into your account</h4>
+    </div>
+
+    <form action="{% url 'register' %}" method="POST" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- First Name Input -->
+        <div>
+            <label class="flex justify-center text-black text-sm mb-2 block text-left">First Name</label>
+            {{ form.first_name }}
+        </div>
+        
+        <!-- Last Name Input -->
+        <div>
+            <label class="flex justify-center text-black text-sm mb-2 block text-left">Last Name</label>
+            {{ form.last_name }}
+        </div>
+        
+        <!-- Email Input -->
+        <div>
+            <label class="flex justify-center text-black text-sm mb-2 block text-left">Email Id</label>
+            {{ form.email }}
+        </div>
+        
+        <!-- Mobile Number Input -->
+        <div>
+            <label class="flex justify-center text-black text-sm mb-2 block text-left">Mobile No.</label>
+            {{ form.phone_number }}
+        </div>
+        
+        <!-- Password Input -->
+        <div>
+            <label class="flex justify-center text-black text-sm mb-2 block text-left">Password</label>
+            {{ form.password }}
+        </div>
+        
+        <!-- Confirm Password Input -->
+        <div>
+            <label class="flex justify-center text-black text-sm mb-2 block text-left">Confirm Password</label>
+            {{ form.confirm_password }}
+        </div>
+
+        <!-- Signup Button -->
+        <div>
+            <button type="submit" class="w-full py-3 text-sm font-semibold tracking-wider rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none border border-gold-500 shadow-md">
+                Sign up
+            </button>
+        </div>
+
+        <!-- Error Messages for Email and Other Fields -->
+        <div class="text-red-500 text-xs mt-4">
+            <h1>{{ form.email.errors }}</h1>
+        </div>
+        <div class="text-red-500 text-xs">
+            <h1>{{ form.non_field_errors }}</h1>
+        </div>
+    </form>
+
+    <!-- Link to Login Page -->
+    <div class="mt-4 text-sm">
+        <p class="text-gray-600">Already have an account? <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Log in</a></p>
+    </div>
+</div>
+
+<!-- Custom Styles for Gold Theme -->
+<style>
+    .border-gold-500 {
+        border-color: #FFD700; /* Gold border color */
+    }
+    .bg-gold {
+        background-color: #FFD700; /* Gold background color */
+    }
+</style>
