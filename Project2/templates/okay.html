@@ -1,0 +1,67 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="{% static 'css/all.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'js/all.js' %}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- AOS Library -->
+    <script src="https://animatedicons.co/scripts/embed-animated-icons.js"></script>
+<header class="flex justify-between items-center p-4">
+
+      <!-- Logo -->
+      <div class="font-bold text-2xl">
+        <a href="#">Logo</a>
+      </div>
+
+      <!-- Navigation for larger screens -->
+      <div class="hidden md:flex space-x-2 text-xl">
+        <a href="{%url 'home'%}" class="p-2">Home</a>
+        <a href="{% url 'competition'%}" class="p-2">Competition</a>
+        <a href="#" class="p-2">Gallery</a>
+        <a href="#" class="relative inline-block py-2 px-6 text-white bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300 rounded-full shadow-2xl transform transition-all duration-500 ease-out hover:bg-gradient-to-l hover:from-yellow-600 hover:to-yellow-500 hover:scale-110 hover:ring-4 hover:ring-yellow-300 hover:shadow-2xl hover:shadow-yellow-500 hover:text-black">
+          Membership
+          <!-- Glowing Border -->
+          <span class="absolute inset-0 border-2 border-transparent rounded-full animate-pulse glow-border"></span>
+        </a>
+      </div>
+
+     
+<div class=" hidden md:flex md:items-center space-x-2 md:ml-4 md:text-lg text-xl">
+        
+        <a href="#" class="join-now-btn inline-block py-2 px-6 text-white bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 rounded-3xl shadow-lg transform transition-all duration-300 ease-out hover:scale-110">
+          Join Now
+        </a>
+        <button onclick="toggleDarkMode()" class="text-xl p-2 bg-black w-20 rounded-full text-black dark:text-white transition-all">
+          <i id="mode-icon" class="fas fa-moon"></i>
+        </button>
+
+      </div> 
+
+
+      <!-- Burger Menu for Mobile -->
+      <div class="md:hidden flex items-center">
+        <button id="burger-menu" class="text-3xl" onclick="toggleMenu()">☰</button>
+      </div>
+        
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 p-5 md:hidden">
+      <div class="flex flex-col items-center justify-top space-y-5 text-white h-full">
+        <button id="close-menu" class="text-3xl text-white hidden absolute top-5 right-5" onclick="toggleMenu()">×</button>
+        <a href="#" class="p-3">Home</a>
+        <a href="#" class="p-3">Competition</a>
+        <a href="#" class="p-3">Gallery</a>
+        <a href="#" class="relative w-40 inline-block py-2 px-6 text-white bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300 rounded-full shadow-2xl transform transition-all duration-500 ease-out hover:bg-gradient-to-l hover:from-yellow-600 hover:to-yellow-500 hover:scale-110 hover:ring-4 hover:ring-yellow-300 hover:shadow-2xl hover:shadow-yellow-500 hover:text-black">
+          Membership
+          <!-- Glowing Border -->
+          <span class="absolute inset-0 border-2 border-transparent rounded-full animate-pulse glow-border"></span>
+        </a>
+        <a href="#" class="join-now-btn w-40 inline-block py-2 px-10 text-white bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 rounded-3xl shadow-lg transform transition-all duration-300 ease-out hover:scale-110">
+          Join Now
+        </a>
+
+        <!-- Dark/Light Mode Toggle Button (For Mobile) -->
+        <button onclick="toggleDarkMode()" class="text-xl p-2 w-20 rounded-full text-black dark:text-white transition-all">
+          <i id="mode-icon" class="fas fa-moon"></i>
+        </button>
+      </div>
+    </div>

@@ -1,0 +1,239 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post Detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <style>
+    /* Ensure the overlay blur effect works in all browsers */
+    .backdrop-blur-custom {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    /* Default image styles */
+    .blurred {
+      filter: blur(0px);
+      transition: filter 0.3s ease;
+    }
+
+    .blurred-active {
+      filter: blur(10px);
+    }
+    /* Hide scrollbar while keeping the scroll functionality */
+.scrollable-comments {
+  max-height: 300px;
+  overflow-y: scroll;
+  scrollbar-width: none;  /* For Firefox */
+}
+
+.scrollable-comments::-webkit-scrollbar {
+  display: none;  /* For Chrome, Safari, and Edge */
+}
+
+    /* Watermark Styles (hidden by default) */
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 3rem;
+      font-weight: bold;
+      text-align: center;
+      pointer-events: none; /* Prevent watermark from blocking interactions */
+      user-select: none; /* Prevent selection of watermark text */
+      display: none; /* Initially hide watermark */
+    }
+
+    /* Cross button styles (placed in the top-right corner of the whole container) */
+    .cross-btn {
+      position: absolute;
+      top: -14px;
+      right: -4px;
+    
+      color: white;
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10; /* Ensure it stays above the blurred overlay */
+    }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+  {% include 'header.html' %}
+
+  <!-- Full-Screen Blurred Overlay Container -->
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-custom">
+    <!-- Main Post Detail Container (Large Box) -->
+    <div class="w-full max-w-5xl mx-4 bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-2xl relative">
+      
+      <!-- Cross Button to Close and Redirect to Gallery -->
+      <button id="close-btn" class="cross-btn">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="flex flex-col md:flex-row">
+        <!-- Left: Post Image -->
+        <div class="md:w-2/3 relative">
+          <img 
+            id="post-image"
+              src="{{post.photo.url}}" 
+            alt="Post Detail Image" 
+            class="w-full h-full object-cover blurred">
+          
+          <!-- Watermark Text (Initially hidden) -->
+          <div id="watermark" class="watermark">photography_compete</div>
+        </div>
+        <!-- Right: Post Details, Comments, and Controls -->
+        <div class="md:w-1/3 p-6 flex flex-col h-full">
+          <!-- Published Comments (Scrollable) -->
+          <div class="flex-1 overflow-y-auto mb-4 scrollable-comments" style="max-height: 300px;" id="comment-container">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Comments</h3>
+            <div class="space-y-4">
+              {% for comment in comments %}
+              <div class="flex items-start p-3 bg-transparent rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all ease-in-out">
+                <div class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex-shrink-0">
+                  {% if comment.user.userprofile and comment.user.userprofile.profile_picture %}
+                  <a href="{% url 'dashboard' username=comment.user.username %}">
+                    <img src="{{ comment.user.userprofile.profile_picture.url }}" alt="{{ comment.user.username }}'s avatar" class="w-full h-full rounded-full object-cover">
+                  </a>
+                  {% else %}
+                  <p>Ok</p>
+                  {% endif %}
+                </div>
+                <div class="ml-3 w-full">
+                  <div class="flex items-center">
+                    <a href="{% url 'dashboard' username=comment.user.username %}">
+                      <span class="font-semibold text-gray-900 dark:text-gray-100">{{ comment.user.username }}</span>
+                    </a>
+                    <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">{{ comment.created_at|custom_time_since }}</span>
+                  </div>
+                  <p class="text-gray-800 dark:text-gray-200 mt-1">{{ comment.content }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Add Comment Form & Like/Share Controls (Aligned at the bottom) -->
+          <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <form method="POST" class="flex items-center space-x-4">
+                {% csrf_token %}
+                <input type="text" name="content" placeholder="Add a comment..." class="flex-grow border-none focus:ring-0 bg-transparent text-gray-800 dark:text-gray-200 py-0" />
+                <button type="submit" class="text-blue-500 font-semibold focus:outline-none">Post</button>
+            </form>
+
+            <!-- Like & Share Controls -->
+            <div class="flex items-center justify-between pt-4">
+              <div class="flex items-center space-x-4">
+                <!-- Like Button -->
+                <form method="POST" action="{% url 'view_post' slug=post.slug username=post.account.username %}">
+                  {% csrf_token %}
+                  <button type="submit" name="like" class="focus:outline-none">
+                    <i class="fas fa-heart text-2xl transition-all duration-300"
+                       {% if request.user in post.likes.all %}
+                         style="color: red;" 
+                       {% else %}
+                         style="color: gray;"
+                       {% endif %}>
+                    </i>
+                  </button>
+                </form>
+
+                <!-- Like Count -->
+                <span class="text-gray-700 dark:text-gray-200">{{ post.like_count }} likes</span>
+              </div>
+
+              <!-- Share Button -->
+              <button class="text-blue-500 focus:outline-none" onclick="copyLink()">
+                <i class="fas fa-share text-2xl"></i>
+              </button>
+              <div id="copy-notification" class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg text-sm opacity-0 pointer-events-none transition-opacity duration-300">
+                  Link copied to clipboard!
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Disable right-click context menu
+    document.addEventListener("contextmenu", function(event) {
+      event.preventDefault();
+    });
+
+    // Detect PrintScreen key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === "PrintScreen") {
+        // Show the watermark when screenshot is detected
+        document.getElementById('watermark').style.display = 'block';
+      }
+    });
+
+    // Detect if developer tools are opened
+    let isDevToolsOpen = false;
+    const threshold = 160;
+
+    setInterval(function() {
+      const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+      const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+
+      if (widthThreshold || heightThreshold) {
+        if (!isDevToolsOpen) {
+          isDevToolsOpen = true;
+          // Show the watermark when developer tools are detected
+          document.getElementById('watermark').style.display = 'block';
+        }
+      } else {
+        isDevToolsOpen = false;
+        document.getElementById('watermark').style.display = 'none';
+      }
+    }, 100);
+
+    // Handle close button click to redirect to gallery
+    document.getElementById('close-btn').addEventListener('click', function() {
+      window.location.href = "{% url 'gallery' %}";  // Redirect to the gallery page
+    });
+
+    function copyLink() {
+      // Get the current URL
+      const currentUrl = window.location.href;
+      
+      // Create a temporary input element to select the URL
+      const input = document.createElement('input');
+      input.value = currentUrl;
+      document.body.appendChild(input);
+      
+      // Select the input text
+      input.select();
+      input.setSelectionRange(0, 99999); // For mobile devices
+
+      // Execute the copy command
+      document.execCommand('copy');
+      
+      // Remove the input element from the document
+      document.body.removeChild(input);
+      
+      // Show the "Link copied" notification
+      const notification = document.getElementById('copy-notification');
+      notification.classList.remove('opacity-0');
+      notification.classList.add('opacity-100');
+      
+      // After 5 seconds, hide the notification
+      setTimeout(function() {
+        notification.classList.remove('opacity-100');
+        notification.classList.add('opacity-0');
+      }, 5000); // 5000ms = 5 seconds
+    }    
+  </script>
+</body>
+</html>

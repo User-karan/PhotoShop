@@ -1,0 +1,104 @@
+<style>
+      /* Glowing Border Animation */
+      .glow-border {
+        animation: glowing 3s infinite;
+      }
+
+      @keyframes glowing {
+        0% {
+          border-color: transparent;
+          box-shadow: 0 0 10px 3px rgba(255, 193, 7, 0.5);
+        }
+        50% {
+          border-color: rgba(255, 193, 7, 0.7);
+          box-shadow: 0 0 20px 5px rgba(255, 193, 7, 0.8);
+        }
+        100% {
+          border-color: transparent;
+          box-shadow: 0 0 10px 3px rgba(255, 193, 7, 0.5);
+        }
+      }
+
+      .join-now-btn {
+        position: relative;
+        transition: transform 0.3s ease-out; /* Faster transition */
+      }
+
+      .join-now-btn span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: inherit;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+        z-index: -1;
+        animation: glowing 1s infinite; /* Faster glowing animation */
+      }
+
+      .dark {
+        background-color: #121212;
+        color: white;
+      }
+      .dark .text-black{
+        color:white;
+      }
+      .dark p{
+        color:white !important;
+      }
+      .dark ul{
+        color:white !important;
+      }
+    /* When dark mode is active, change the text color inside the table */
+.dark table {
+    background-color: #1f2937; /* Dark background for the table */
+}
+
+.dark table th,
+.dark table td {
+    color: white; /* Text color for headers and data cells */
+}
+
+.dark table th {
+    background-color: black; /* Darker background for table header */
+}
+
+.dark table td {
+    background-color: black; /* Darker background for table data cells */
+}
+
+
+      .dark .join-now-btn {
+        background: linear-gradient(to left, #00d2ff, #3a7bd5);
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+      }
+
+      #mobile-menu {
+        z-index: 50;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+      }
+      /* Example for fade-in animation */
+
+
+.fade-in.visible {
+  opacity: 1;
+}
+    @keyframes appear{
+    from{
+    opacity:0.5;
+    transform:scale(0.5);
+    }
+    to{
+    opacity:2;
+    transform:scale(1.1);
+    }
+    }
+    .block {
+    animation: appear 0.5s linear;
+    animation-timeline: view();
+    }
+        </style>
+
