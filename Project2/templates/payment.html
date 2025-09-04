@@ -1,0 +1,24 @@
+{% include 'header.html' %}
+{%load static%}
+{% block content %}
+<div class="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg mt-10">
+    <h2 class="text-2xl font-semibold text-gray-800 text-center">Pay 300 NRS for Membership</h2>
+
+    <!-- Khalti QR Code to Scan -->
+    <div class="flex justify-center mt-8">
+        <img src="{% static 'img/payments.jpg' %}" alt="Khalti QR Code" class="w-42 h-64">
+    </div>
+
+    <p class="mt-6 text-center text-gray-600">Scan the QR code above to make a payment of 300 NRS.</p>
+
+    <!-- Upload Screenshot Section -->
+    <div class="mt-8 text-center">
+        <h3 class="text-xl font-semibold">Upload Payment Screenshot</h3>
+        <form method="POST" enctype="multipart/form-data" class="mt-4">
+            {% csrf_token %}
+            <input type="file" name="payment_screenshot" accept="image/*" required class="border-2 border-gray-300 p-2 rounded-md">
+            <button type="submit" class="mt-4 py-2 px-6 bg-indigo-600 text-white rounded-md">Upload Screenshot</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
